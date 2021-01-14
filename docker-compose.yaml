@@ -4,24 +4,36 @@ services:
   app:
     build: .
     entrypoint: ./.docker/entrypoint.sh
-    container_name: catalog-service-app
+    container_name: catalog-app
     ports:
       - 3001:3000
     environment:
       - HOST=0.0.0.0
+      - DEBUG=${DEBUG}
+      - APP_ENV=${APP_ENV}
+      - ELASTIC_SEARCH_HOST=${ELASTIC_SEARCH_HOST}
+      - ELASTIC_SEARCH_REQUEST_TIMEOUT=${ELASTIC_SEARCH_REQUEST_TIMEOUT}
+      - ELASTIC_SEARCH_PING_TIMEOUT=${ELASTIC_SEARCH_PING_TIMEOUT}
     volumes:
       - .:/home/node/app
     networks:
       - app-network
-      - rabbitmq_catalog-service
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
-    container_name: catalog-service-elasticsearch
+    container_name: catalog-elasticsearch
     environment:
-      - discovery.type=single-node
+      - node.name=elasticsearch
+      - cluster.name=elasticsearch-docker-cluster
+      - cluster.initial_master_nodes=elasticsearch
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
-      - ./.docker/elasticdata:/usr/share/elasticsearch/data
+      - esdata01:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     networks:
@@ -37,5 +49,6 @@ services:
 networks:
   app-network:
     driver: bridge
-  rabbitmq_catalog-service:
-    external: true
+volumes:
+  esdata01:
+    driver: local

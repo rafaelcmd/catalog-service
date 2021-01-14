@@ -55,8 +55,10 @@
     "@loopback/rest": "^9.1.1",
     "@loopback/rest-explorer": "^3.0.5",
     "@loopback/service-proxy": "^3.0.5",
+    "debug": "^4.3.1",
     "dotenv": "^8.2.0",
     "loopback-connector-es": "^1.4.1",
+    "loopback-connector-esv6": "2.1.1",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
