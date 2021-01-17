@@ -14,7 +14,31 @@ const config = {
     pingTimeout: process.env.ELASTIC_SEARCH_PING_TIMEOUT
   },
   mappingProperties: {
-
+    docType: {
+      type: 'keyword'
+    },
+    id: {
+      type: 'keyword'
+    },
+    name: {
+      type: 'text',
+      fields: {
+        keyword: {
+          type: 'keyword',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          ignore_above: 256
+        }
+      }
+    },
+    isActive: {
+      type: 'boolean'
+    },
+    createdAt: {
+      type: 'date'
+    },
+    updatedAt: {
+      type: 'date'
+    }
   }
 };
 
