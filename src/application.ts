@@ -6,6 +6,8 @@ import path from 'path';
 import {MySequence} from './sequence';
 import {RabbitmqServer} from './servers';
 import {RestComponent, RestServer} from '@loopback/rest';
+import {RestExplorerComponent} from './components';
+import {RestExplorerBindings} from '@loopback/rest-explorer';
 
 export {ApplicationConfig};
 
@@ -20,11 +22,11 @@ export class CatalogServiceApplication extends BootMixin(
     const restServer = this.getSync<RestServer>('servers.RestServer');
     restServer.static('/', path.join(__dirname, '../public'));
 
-    // Customize @loopback/rest-explorer configuration here
-    // this.configure(RestExplorerBindings.COMPONENT).to({
-    //   path: '/explorer',
-    // });
-    // this.component(RestExplorerComponent);
+    //Customize @loopback/rest-explorer configuration here
+    this.bind(RestExplorerBindings.CONFIG).to({
+      path: '/explorer',
+    });
+    this.component(RestExplorerComponent);
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
