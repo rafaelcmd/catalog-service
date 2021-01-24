@@ -1,4 +1,4 @@
-import {Server} from '@loopback/core';
+import {ApplicationConfig, inject, Server} from '@loopback/core';
 import {Context} from '@loopback/context';
 import {Channel, connect, Connection, Replies} from 'amqplib';
 import AssertQueue = Replies.AssertQueue;
@@ -6,22 +6,20 @@ import AssertExchange = Replies.AssertExchange;
 import {repository} from '@loopback/repository';
 import {CategoryRepository} from '../repositories';
 import {Category} from '../models';
+import {RabbitmqBindings} from '../keys';
 
 export class RabbitmqServer extends Context implements Server {
   private _listening: boolean;
   conn: Connection;
   channel: Channel;
 
-  constructor(@repository(CategoryRepository) private categoryRepo: CategoryRepository) {
+  constructor(@repository(CategoryRepository) private categoryRepo: CategoryRepository,
+              @inject(RabbitmqBindings.CONFIG) private config: {uri: string}) {
     super();
   }
 
   async start(): Promise<void> {
-    this.conn = await connect({
-      hostname: 'rabbitmq',
-      username: 'admin',
-      password: 'admin'
-    });
+    this.conn = await connect(this.config.uri);
     this._listening = true;
     await this.boot();
 
@@ -44,7 +42,7 @@ export class RabbitmqServer extends Context implements Server {
       this
         .sync({model, event, data})
         .then(() => this.channel.ack(message))
-        .catch((err) => {
+        .catch(() => {
           this.channel.reject(message, false)
         });
     });

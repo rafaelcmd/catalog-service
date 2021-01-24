@@ -1,3 +1,4 @@
+import './bootstrap';
 import {ApplicationConfig, CatalogServiceApplication} from './application';
 import {RestServer} from '@loopback/rest';
 
@@ -33,6 +34,9 @@ if (require.main === module) {
         setServersFromRequest: true,
       },
     },
+    rabbitmq: {
+      uri: process.env.RABBITMQ_URI
+    }
   };
   main(config).catch(err => {
     console.error('Cannot start the application.', err);

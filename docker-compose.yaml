@@ -9,11 +9,6 @@ services:
       - 3001:3000
     environment:
       - HOST=0.0.0.0
-      - DEBUG=${DEBUG}
-      - APP_ENV=${APP_ENV}
-      - ELASTIC_SEARCH_HOST=${ELASTIC_SEARCH_HOST}
-      - ELASTIC_SEARCH_REQUEST_TIMEOUT=${ELASTIC_SEARCH_REQUEST_TIMEOUT}
-      - ELASTIC_SEARCH_PING_TIMEOUT=${ELASTIC_SEARCH_PING_TIMEOUT}
     volumes:
       - .:/home/node/app
     networks:
