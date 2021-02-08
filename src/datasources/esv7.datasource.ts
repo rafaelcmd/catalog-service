@@ -38,6 +38,12 @@ const config = {
     },
     updatedAt: {
       type: 'date'
+    },
+    deletedAt: {
+      type: 'date'
+    },
+    type: {
+      type: 'text'
     }
   }
 };
