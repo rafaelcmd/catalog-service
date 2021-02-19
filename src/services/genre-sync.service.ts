@@ -5,25 +5,47 @@ import {repository} from '@loopback/repository';
 
 @injectable({scope: BindingScope.TRANSIENT})
 export class GenreSyncService {
-  constructor(@repository(GenreRepository) private categoryRepo: GenreRepository) {}
+  constructor(@repository(GenreRepository) private genreRepo: GenreRepository) {}
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'x',
-    routingKey: 'model.genre.*'
+    queue: 'create',
+    routingKey: 'model.genre.create'
   })
 
-  handler({data}: {data: any}) {
-    console.log(data);
+  async createGenre({data}: {data: any}) {
+    try {
+      await this.genreRepo.create(data);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'x1',
-    routingKey: 'model.genre1.*'
+    queue: 'change',
+    routingKey: 'model.genre.change'
   })
 
-  handler1({data}: {data: any}) {
-    console.log(data);
+  async changeGenre({data}: {data: any}) {
+    try {
+      await this.genreRepo.updateById(data.id, data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  @rabbitmqSubscriber({
+    exchange: 'amq.topic',
+    queue: 'delete',
+    routingKey: 'model.genre.delete'
+  })
+
+  async deleteGenre({data}: {data: any}) {
+    try {
+      await this.genreRepo.deleteById(data.id);
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

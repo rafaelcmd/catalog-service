@@ -1,6 +1,6 @@
 import {DefaultCrudRepository} from '@loopback/repository';
 import {Category, CategoryRelations} from '../models';
-import {Esv7DataSource} from '../datasources';
+import {Esv7DataSource} from '../datasources/esv7.datasource';
 import {inject} from '@loopback/core';
 
 export class CategoryRepository extends DefaultCrudRepository<

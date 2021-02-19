@@ -9,21 +9,44 @@ export class CategorySyncService {
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'x',
-    routingKey: 'model.category.*'
+    queue: 'create',
+    routingKey: 'model.category.create'
   })
 
-  handler({data}: {data: any}) {
-    console.log(data);
+  async createCategory({data}: {data: any}) {
+    try {
+      await this.categoryRepo.create(data);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'x1',
-    routingKey: 'model.category1.*'
+    queue: 'change',
+    routingKey: 'model.category.change'
   })
 
-  handler1({data}: {data: any}) {
-    console.log(data);
+  async changeCategory({data}: {data: any}) {
+    try {
+      await this.categoryRepo.updateById(data.id, data);
+    } catch (e) {
+      console.log(e);
+    }
   }
+
+  @rabbitmqSubscriber({
+    exchange: 'amq.topic',
+    queue: 'delete',
+    routingKey: 'model.category.delete'
+  })
+
+  async deleteCategory({data}: {data: any}) {
+    try {
+      await this.categoryRepo.deleteById(data.id);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
 }

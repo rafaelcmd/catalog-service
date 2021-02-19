@@ -1,8 +1,6 @@
 import {Application, CoreBindings, inject, Server} from '@loopback/core';
 import {Context, Binding} from '@loopback/context';
 import {Channel, ConfirmChannel, Options} from 'amqplib';
-import {repository} from '@loopback/repository';
-import {CategoryRepository} from '../repositories';
 import {RabbitmqBindings} from '../keys';
 import {AmqpConnectionManager, AmqpConnectionManagerOptions, ChannelWrapper, connect} from 'amqp-connection-manager';
 import {MetadataInspector} from '@loopback/metadata';
@@ -22,7 +20,6 @@ export class RabbitmqServer extends Context implements Server {
 
   constructor(
     @inject(CoreBindings.APPLICATION_INSTANCE) public app: Application,
-    @repository(CategoryRepository) private categoryRepo: CategoryRepository,
     @inject(RabbitmqBindings.CONFIG) private config: RabbitmqConfig) {
     super(app);
   }
@@ -126,7 +123,7 @@ export class RabbitmqServer extends Context implements Server {
           } catch (e) {
             data = null;
           }
-          console.log(data);
+          //console.log(data);
           method({data, message, channel});
           channel.ack(message);
         }

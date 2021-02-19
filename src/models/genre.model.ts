@@ -25,19 +25,19 @@ export class Genre extends Entity {
 
   @property({
     type: 'date',
-    required: true,
+    required: false,
   })
   deletedAt: string;
 
   @property({
     type: 'date',
-    required: true,
+    required: false,
   })
   createdAt: string;
 
   @property({
     type: 'date',
-    required: true,
+    required: false,
   })
   updatedAt: string;
 
