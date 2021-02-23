@@ -9,7 +9,7 @@ export class CategorySyncService {
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'create',
+    queue: 'create.category',
     routingKey: 'model.category.create'
   })
 

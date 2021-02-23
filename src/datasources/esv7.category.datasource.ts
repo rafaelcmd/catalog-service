@@ -7,7 +7,7 @@ const config = {
   index: 'catalog',
   version: 7,
   debug: process.env.APP_ENV === 'dev',
-  //defaultSize: ,
+  defaultSize: 50,
   configuration: {
     node: process.env.ELASTIC_SEARCH_HOST,
     requestTimeout: process.env.ELASTIC_SEARCH_REQUEST_TIMEOUT,
@@ -53,7 +53,7 @@ const config = {
 // gracefully. The `stop()` method is inherited from `juggler.DataSource`.
 // Learn more at https://loopback.io/doc/en/lb4/Life-cycle.html
 @lifeCycleObserver('datasource')
-export class Esv7DataSource extends juggler.DataSource
+export class Esv7CategoryDatasource extends juggler.DataSource
   implements LifeCycleObserver {
   static dataSourceName = 'esv7';
   static readonly defaultConfig = config;

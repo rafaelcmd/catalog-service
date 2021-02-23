@@ -9,7 +9,7 @@ export class GenreSyncService {
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'create',
+    queue: 'create.genre',
     routingKey: 'model.genre.create'
   })
 
