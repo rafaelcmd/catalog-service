@@ -23,7 +23,7 @@ export class GenreSyncService {
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'change',
+    queue: 'change.genre',
     routingKey: 'model.genre.change'
   })
 
@@ -37,7 +37,7 @@ export class GenreSyncService {
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'delete',
+    queue: 'delete.genre',
     routingKey: 'model.genre.delete'
   })
 

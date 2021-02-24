@@ -1,7 +1,4 @@
-import {lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
-import {juggler} from '@loopback/repository';
-
-const config = {
+export const genreConfig = {
   name: 'esv6',
   connector: 'esv6',
   index: 'catalog',
@@ -33,32 +30,14 @@ const config = {
     isActive: {
       type: 'boolean'
     },
+    deletedAt: {
+      type: 'date'
+    },
     createdAt: {
       type: 'date'
     },
     updatedAt: {
       type: 'date'
-    },
-    deletedAt: {
-      type: 'date'
-    },
-    type: {
-      type: 'text'
     }
   }
 };
-
-// Observe application's life cycle to disconnect the datasource when
-// application is stopped. This allows the application to be shut down
-// gracefully. The `stop()` method is inherited from `juggler.DataSource`.
-// Learn more at https://loopback.io/doc/en/lb4/Life-cycle.html
-@lifeCycleObserver('datasource')
-export class Esv7CategoryDatasource extends juggler.DataSource
-  implements LifeCycleObserver {
-  static dataSourceName = 'esv7';
-  static readonly defaultConfig = config;
-
-  constructor() {
-    super(config);
-  }
-}

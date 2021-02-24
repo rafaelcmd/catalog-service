@@ -18,14 +18,14 @@ export class CastMember extends Entity {
   name: string;
 
   @property({
-    type: 'int',
+    type: 'number',
     required: true,
   })
   type: string;
 
   @property({
     type: 'date',
-    required: true,
+    required: false,
   })
   deletedAt: string;
 

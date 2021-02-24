@@ -18,8 +18,14 @@ export class Category extends Entity {
   name: string;
 
   @property({
+    type: 'string',
+    required: true,
+  })
+  description: string;
+
+  @property({
     type: 'boolean',
-    required: false,
+    required: true,
   })
   isActive = true;
 
@@ -27,11 +33,17 @@ export class Category extends Entity {
     type: 'date',
     required: false
   })
+  deletedAt: string;
+
+  @property({
+    type: 'date',
+    required: true
+  })
   createdAt: string;
 
   @property({
     type: 'date',
-    required: false
+    required: true
   })
   updatedAt: string;
 

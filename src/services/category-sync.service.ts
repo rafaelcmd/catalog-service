@@ -5,7 +5,8 @@ import {repository} from '@loopback/repository';
 
 @injectable({scope: BindingScope.TRANSIENT})
 export class CategorySyncService {
-  constructor(@repository(CategoryRepository) private categoryRepo: CategoryRepository) {}
+  constructor(@repository(CategoryRepository) private categoryRepo: CategoryRepository) {
+  }
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
@@ -23,7 +24,7 @@ export class CategorySyncService {
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'change',
+    queue: 'change.category',
     routingKey: 'model.category.change'
   })
 
@@ -37,7 +38,7 @@ export class CategorySyncService {
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'delete',
+    queue: 'delete.category',
     routingKey: 'model.category.delete'
   })
 
@@ -48,5 +49,4 @@ export class CategorySyncService {
       console.log(e);
     }
   }
-
 }

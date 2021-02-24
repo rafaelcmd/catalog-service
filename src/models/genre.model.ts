@@ -19,9 +19,9 @@ export class Genre extends Entity {
 
   @property({
     type: 'boolean',
-    required: false,
+    required: true,
   })
-  isActive?: boolean;
+  isActive = true;
 
   @property({
     type: 'date',
@@ -31,13 +31,13 @@ export class Genre extends Entity {
 
   @property({
     type: 'date',
-    required: false,
+    required: true,
   })
   createdAt: string;
 
   @property({
     type: 'date',
-    required: false,
+    required: true,
   })
   updatedAt: string;
 

@@ -1,6 +1,6 @@
 import {DefaultCrudRepository} from '@loopback/repository';
 import {Category, CategoryRelations} from '../models';
-import {Esv7CategoryDatasource} from '../datasources/esv7.category.datasource';
+import {Esv7CategoryDatasource} from '../datasources';
 import {inject} from '@loopback/core';
 
 export class CategoryRepository extends DefaultCrudRepository<
@@ -9,7 +9,7 @@ export class CategoryRepository extends DefaultCrudRepository<
   CategoryRelations
 > {
   constructor(
-    @inject('datasources.esv7') dataSource: Esv7CategoryDatasource,
+    @inject('datasources.esv7Category') dataSource: Esv7CategoryDatasource,
   ) {
     super(Category, dataSource);
   }
