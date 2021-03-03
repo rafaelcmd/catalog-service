@@ -28,7 +28,7 @@ export const castMemberConfig = {
       }
     },
     type: {
-      type: 'number'
+      type: 'byte'
     },
     deletedAt: {
       type: 'date'

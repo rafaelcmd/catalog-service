@@ -1,5 +1,10 @@
 import {Entity, model, property} from '@loopback/repository';
 
+export enum CastMemberType {
+  DIRECTOR= 1,
+  ACTOR = 2
+}
+
 @model()
 export class CastMember extends Entity {
 
