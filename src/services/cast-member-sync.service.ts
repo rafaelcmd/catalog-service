@@ -2,50 +2,31 @@ import {injectable, /* inject, */ BindingScope} from '@loopback/core';
 import {rabbitmqSubscriber} from '../decorators/rabbitmq-subscribe.decorator';
 import {CastmemberRepository} from '../repositories';
 import {repository} from '@loopback/repository';
+import {Message} from 'amqplib';
 
-@injectable({scope: BindingScope.TRANSIENT})
+@injectable({scope: BindingScope.SINGLETON})
 export class CastMemberSyncService {
   constructor(@repository(CastmemberRepository) private castMemberRepo: CastmemberRepository) {}
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'create.castmember',
-    routingKey: 'model.castmember.create'
+    queue: 'catalog-service/sync-videos/castmember',
+    routingKey: 'model.castmember.*'
   })
 
-  async createCastMember({data}: {data: any}) {
-    try {
-      await this.castMemberRepo.create(data);
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  async handler({data, message}: {data: any, message: Message}) {
+    const action = message.fields.routingKey.split('.')[2];
 
-  @rabbitmqSubscriber({
-    exchange: 'amq.topic',
-    queue: 'change.castmember',
-    routingKey: 'model.castmember.change'
-  })
-
-  async changeCastMember({data}: {data: any}) {
-    try {
-      await this.castMemberRepo.updateById(data.id, data);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  @rabbitmqSubscriber({
-    exchange: 'amq.topic',
-    queue: 'delete.castmember',
-    routingKey: 'model.castmember.delete'
-  })
-
-  async deleteCastMember({data}: {data: any}) {
-    try {
-      await this.castMemberRepo.deleteById(data.id);
-    } catch (e) {
-      console.log(e);
+    switch (action) {
+      case 'created':
+        await this.castMemberRepo.create(data);
+        break;
+      case 'updated':
+        await this.castMemberRepo.updateById(data.id, data);
+        break;
+      case 'deleted':
+        await this.castMemberRepo.deleteById(data.id);
+        break;
     }
   }
 }

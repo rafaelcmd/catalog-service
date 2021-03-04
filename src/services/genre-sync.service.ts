@@ -4,7 +4,7 @@ import {GenreRepository} from '../repositories';
 import {repository} from '@loopback/repository';
 import {Message} from 'amqplib';
 
-@injectable({scope: BindingScope.TRANSIENT})
+@injectable({scope: BindingScope.SINGLETON})
 export class GenreSyncService {
   constructor(@repository(GenreRepository) private genreRepo: GenreRepository) {}
 

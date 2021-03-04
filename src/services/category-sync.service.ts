@@ -2,51 +2,32 @@ import {injectable, /* inject, */ BindingScope} from '@loopback/core';
 import {rabbitmqSubscriber} from '../decorators/rabbitmq-subscribe.decorator';
 import {CategoryRepository} from '../repositories';
 import {repository} from '@loopback/repository';
+import {Message} from 'amqplib';
 
-@injectable({scope: BindingScope.TRANSIENT})
+@injectable({scope: BindingScope.SINGLETON})
 export class CategorySyncService {
   constructor(@repository(CategoryRepository) private categoryRepo: CategoryRepository) {
   }
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
-    queue: 'create.category',
-    routingKey: 'model.category.create'
+    queue: 'catalog-service/sync-videos/category',
+    routingKey: 'model.category.*'
   })
 
-  async createCategory({data}: {data: any}) {
-    try {
-      await this.categoryRepo.create(data);
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  async handler({data, message}: {data: any, message: Message}) {
+    const action = message.fields.routingKey.split('.')[2];
 
-  @rabbitmqSubscriber({
-    exchange: 'amq.topic',
-    queue: 'change.category',
-    routingKey: 'model.category.change'
-  })
-
-  async changeCategory({data}: {data: any}) {
-    try {
-      await this.categoryRepo.updateById(data.id, data);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  @rabbitmqSubscriber({
-    exchange: 'amq.topic',
-    queue: 'delete.category',
-    routingKey: 'model.category.delete'
-  })
-
-  async deleteCategory({data}: {data: any}) {
-    try {
-      await this.categoryRepo.deleteById(data.id);
-    } catch (e) {
-      console.log(e);
+    switch (action) {
+      case 'created':
+        await this.categoryRepo.create(data);
+        break;
+      case 'updated':
+        await this.categoryRepo.updateById(data.id, data);
+        break;
+      case 'deleted':
+        await this.categoryRepo.deleteById(data.id);
+        break;
     }
   }
 }
