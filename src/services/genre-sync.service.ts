@@ -3,10 +3,13 @@ import {rabbitmqSubscriber} from '../decorators/rabbitmq-subscribe.decorator';
 import {GenreRepository} from '../repositories';
 import {repository} from '@loopback/repository';
 import {Message} from 'amqplib';
+import {BaseModelSyncService} from './base-model-sync.service';
 
 @injectable({scope: BindingScope.SINGLETON})
-export class GenreSyncService {
-  constructor(@repository(GenreRepository) private genreRepo: GenreRepository) {}
+export class GenreSyncService extends BaseModelSyncService {
+  constructor(@repository(GenreRepository) private repo: GenreRepository) {
+    super()
+  }
 
   @rabbitmqSubscriber({
     exchange: 'amq.topic',
@@ -15,18 +18,6 @@ export class GenreSyncService {
   })
 
   async handler({data, message}: {data: any, message: Message}) {
-    const action = message.fields.routingKey.split('.')[2];
-
-    switch (action) {
-      case 'created':
-        await this.genreRepo.create(data);
-        break;
-      case 'updated':
-        await this.genreRepo.updateById(data.id, data);
-        break;
-      case 'deleted':
-        await this.genreRepo.deleteById(data.id);
-        break;
-    }
+    await this.sync({repo: this.repo, data, message})
   }
 }
